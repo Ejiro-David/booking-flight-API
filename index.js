@@ -46,12 +46,13 @@ app.get("/flights/:id", (req, res) => {
   }
 });
 
-//Add full flight details
+//Add full flight details via post request.
 app.post("/flights/add", (req, res) => {
   let flightsId = flight_data.map((x) => x.id);
   flightsId.sort((a, b) => a - b);
   let newFlightId = Math.max(...flightsId) + 1;
 
+  //Title and place are gotten from request body, time and date are auto generated.
   let newFlight = {
     id: newFlightId,
     title: req.body.title,
@@ -94,15 +95,10 @@ app.delete("/flights/delete/:id", (req, res) => {
   })
 //not working properly
   if(found){
-    updatedFlight = flight_data.filter(x => {
-      x !== found
-      
-    })
-    flight_data = updatedFlight;
-    res.sendStatus(204)
+    flight_data.splice(found.id - 1, 1);
+    res.sendStatus(204);
   }
 })
-
 
 const port = process.env.PORT || 8080;
 
