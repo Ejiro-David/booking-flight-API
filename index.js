@@ -43,12 +43,25 @@ app.get("/flights/:id", (req, res) => {
   }
 });
 
-app.put('/', () => {
+app.post("/flights/add", (req, res) => {
+  let flightsId = flight_data.map(x => x.id)
+  flightsId.sort((a, b) => a - b);
+  let newFlightId = Math.max(...flightsId) + 1;
 
+  let newFlight = {
+    id: newFlightId,
+    title: req.body.title,
+    time: new Date().getTime(),
+    price: req.body.price,
+    date:  new Date()
+  }
+
+  flight_data.push(newFlight);
+  res.status(201).json(newFlight)
 })
 
-app.delete('/', () => {
-
+app.put('/flights/update', (req, res) => {
+  
 })
 
 const port = process.env.PORT || 8080;
