@@ -87,6 +87,23 @@ app.put("/flights/update/:id", (req, res) => {
   }
 });
 
+
+app.delete("/flights/delete/:id", (req, res) => {
+  let found = flight_data.filter((x) => {
+    return x.id === parseInt(req.params.id)
+  })
+//not working properly
+  if(found){
+    updatedFlight = flight_data.filter(x => {
+      x !== found
+      
+    })
+    flight_data = updatedFlight;
+    res.sendStatus(204)
+  }
+})
+
+
 const port = process.env.PORT || 8080;
 
 app.listen(port, () => {
