@@ -24,18 +24,21 @@ let flight_data = [
 const app = express();
 
 app.use(json());
-
+//Test
 app.use("/", routes);
 
+//get all flights
 app.get("/flights", (req, res) => {
   res.json(flight_data);
 });
 
+
+//get flight by ID
 app.get("/flights/:id", (req, res) => {
   let found = flight_data.filter((x) => {
     return x.id === parseInt(req.params.id);
   });
-   
+
   if (found) {
     res.status(200).json(found);
   } else {
@@ -43,8 +46,9 @@ app.get("/flights/:id", (req, res) => {
   }
 });
 
+//Add full flight details
 app.post("/flights/add", (req, res) => {
-  let flightsId = flight_data.map(x => x.id)
+  let flightsId = flight_data.map((x) => x.id);
   flightsId.sort((a, b) => a - b);
   let newFlightId = Math.max(...flightsId) + 1;
 
@@ -53,16 +57,35 @@ app.post("/flights/add", (req, res) => {
     title: req.body.title,
     time: new Date().getTime(),
     price: req.body.price,
-    date:  new Date()
-  }
+    date: new Date(),
+  };
 
   flight_data.push(newFlight);
-  res.status(201).json(newFlight)
-})
+  res.status(201).json(newFlight);
+});
 
-app.put('/flights/update', (req, res) => {
-  
-})
+//update flight details by ID
+app.put("/flights/update/:id", (req, res) => {
+  let found = flight_data.filter((x) => {
+    return x.id === parseInt(req.params.id);
+  });
+
+  if (found) {
+    let updatedFlight = {
+      id: found.id,
+      title: req.body.title,
+      time: new Date().getTime(),
+      price: req.body.price,
+      date: new Date(),
+    };
+
+    flight_data.splice(found.id - 1, 1, updatedFlight);
+
+    res.sendStatus(204);
+  } else {
+    res.sendStatus(404);
+  }
+});
 
 const port = process.env.PORT || 8080;
 
